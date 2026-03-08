@@ -7,7 +7,7 @@ export default defineConfig({
   // GitHub Pagesの場合、リポジトリ名をbaseに設定
   // 例: リポジトリ名が "portfolio" なら base: "/portfolio/"
   // ユーザー/組織のページ (username.github.io) なら base: "/"
-  base: process.env.GITHUB_PAGES ? '/Portfolio/' : '/',
+  base: '/Portfolio/',
   plugins: [
     // The React and Tailwind plugins are both required for Make, even if
     // Tailwind is not being actively used – do not remove them
