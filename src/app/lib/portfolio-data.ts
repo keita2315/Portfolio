@@ -1,5 +1,3 @@
-import resultImage from "figma:asset/e4676339f8b9a1537970f766af1cf84298f1c781.png";
-
 export interface PortfolioData {
   personal: {
     name: string;
@@ -132,7 +130,7 @@ export const defaultPortfolioData: PortfolioData = {
       id: "4",
       title: "エッジデバイス最適化フレームワーク",
       description:
-        "TensorRTとCUDAを活用し、深層学習モデルをJetsonデバイス上で高速に動作させるフレームワークを開発。",
+        "TensorRTとCUDAを活用し、深層学習モデルをJetsonデバイス上で高速に動作させ���フレームワークを開発。",
       tags: ["CUDA", "TensorRT", "C++", "Python", "Jetson"],
       metrics: "推論速度: 5倍高速化、消費電力: 30%削減",
       imageUrl:
@@ -144,7 +142,7 @@ export const defaultPortfolioData: PortfolioData = {
     overview:
       "ランダムフォレストの5分類で全体精度により、5人の書道家と成立済を、演者と音色での評価。前係送数の3装委をひつてもらったところ、87.03％の正解率を得ることができた。",
     overviewTitle: "機械学習での評価",
-    resultImageUrl: resultImage,
+    resultImageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80",
     details: {
       flows: [
         {
@@ -343,7 +341,7 @@ export const defaultPortfolioData: PortfolioData = {
       title: "コンピュータビジョンエンジニア",
       company: "株式会社テックビジョン",
       description:
-        "自動運転システムの開発チームで、LiDAR点群処理とセンサーフュージョンを担当。リアルタイム物体検出アルゴリズムの開発と最適化を実施。",
+        "自動運��システムの開発チームで、LiDAR点群処理とセンサーフュージョンを担当。リアルタイム物体検出アルゴリズムの開発と最適化を実施。",
       achievements: [
         "処理速度を従来比2倍に高化",
         "検出精度を8%向上",
