@@ -130,7 +130,7 @@ export const defaultPortfolioData: PortfolioData = {
       id: "4",
       title: "エッジデバイス最適化フレームワーク",
       description:
-        "TensorRTとCUDAを活用し、深層学習モデルをJetsonデバイス上で高速に動作させ���フレームワークを開発。",
+        "TensorRTとCUDAを活用し、深層学習モデルをJetsonデバイス上で高速に動作させるフレームワークを開発。",
       tags: ["CUDA", "TensorRT", "C++", "Python", "Jetson"],
       metrics: "推論速度: 5倍高速化、消費電力: 30%削減",
       imageUrl:
@@ -341,7 +341,7 @@ export const defaultPortfolioData: PortfolioData = {
       title: "コンピュータビジョンエンジニア",
       company: "株式会社テックビジョン",
       description:
-        "自動運��システムの開発チームで、LiDAR点群処理とセンサーフュージョンを担当。リアルタイム物体検出アルゴリズムの開発と最適化を実施。",
+        "自動運転システムの開発チームで、LiDAR点群処理とセンサーフュージョンを担当。リアルタイム物体検出アルゴリズムの開発と最適化を実施。",
       achievements: [
         "処理速度を従来比2倍に高化",
         "検出精度を8%向上",
