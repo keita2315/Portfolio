@@ -1,22 +1,3 @@
-わかりました！GitHub上だけで完結させましょう。
-
-📝 GitHub Web UIで修正する手順
-ステップ1: 正しいファイルを開く
-以下のURLをクリック：
-
-https://github.com/keita2315/Portfolio/blob/main/src/app/lib/portfolio-data.ts
-
-（注意：/src/app/lib/ です。/src/imports/ ではありません）
-
-ステップ2: 編集モードに入る
-ページ右上の 鉛筆アイコン（Edit this file） をクリック
-
-ステップ3: 全選択して削除
-Ctrl+A（Mac は Cmd+A）で全選択
-Delete で削除
-ステップ4: 新しいコードを貼り付け
-以下のコードを 全部コピー して、貼り付け：
-
 export interface PortfolioData {
   personal: {
     name: string;
