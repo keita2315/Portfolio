@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { HeroSection } from "./components/HeroSection";
@@ -8,7 +8,8 @@ import { ResearchSection } from "./components/ResearchSection";
 import { ContactSection } from "./components/ContactSection";
 import { EditorPanel } from "./components/EditorPanel";
 import { PortfolioData, defaultPortfolioData } from "./lib/portfolio-data";
-import { Toaster } from "sonner";
+import { fetchPortfolioData, savePortfolioData } from "./lib/api";
+import { Toaster, toast } from "sonner";
 
 export default function App() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -16,6 +17,7 @@ export default function App() {
   const [showEditPanel, setShowEditPanel] = useState(false);
   const [showDebug, setShowDebug] = useState(false);
   const [debugInfo, setDebugInfo] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // URLパラメータで編集モードをチェック
   const isEditMode = new URLSearchParams(window.location.search).get("edit") === "true";
@@ -24,19 +26,57 @@ export default function App() {
     setDebugInfo(prev => [...prev, `${new Date().toLocaleTimeString()}: ${message}`]);
   };
 
-  const handleSaveData = (newData: PortfolioData) => {
-    addDebugLog("保存開始");
-    setData(newData);
-    localStorage.setItem("portfolioData", JSON.stringify(newData));
-    addDebugLog("LocalStorageに保存完了");
-    // 保存確認
-    const verification = localStorage.getItem("portfolioData");
-    if (verification) {
-      addDebugLog(`✓ 確認OK: データサイズ ${verification.length} bytes`);
-    } else {
-      addDebugLog("✗ エラー: 保存失敗");
+  // 初回ロード時にSupabaseからデータを取得
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        addDebugLog("Supabaseからデータを取得中...");
+        const remoteData = await fetchPortfolioData();
+        
+        if (remoteData) {
+          setData(remoteData);
+          addDebugLog("✓ Supabaseからデータを読み込みました");
+        } else {
+          addDebugLog("⚠ データが見つかりません。デフォルトデータを使用します");
+          // デフォルトデータを初回保存
+          await savePortfolioData(defaultPortfolioData);
+          addDebugLog("✓ デフォルトデータをSupabaseに保存しました");
+        }
+      } catch (error) {
+        addDebugLog(`✗ エラー: ${error}`);
+        toast.error("データの読み込みに失敗しました");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  const handleSaveData = async (newData: PortfolioData) => {
+    try {
+      addDebugLog("保存開始");
+      setData(newData);
+      
+      await savePortfolioData(newData);
+      addDebugLog("✓ Supabaseに保存完了");
+      toast.success("データを保存しました");
+    } catch (error) {
+      addDebugLog(`✗ 保存エラー: ${error}`);
+      toast.error("保存に失敗しました");
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]" />
+          <p className="mt-4 text-sm text-muted-foreground">読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -75,34 +115,35 @@ export default function App() {
             <div className="flex gap-2">
               <button
                 className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
-                onClick={() => {
-                  const stored = localStorage.getItem("portfolioData");
-                  if (stored) {
-                    addDebugLog(`LocalStorage確認: データ存在 (${stored.length} bytes)`);
-                    addDebugLog(`最初の100文字: ${stored.substring(0, 100)}...`);
-                  } else {
-                    addDebugLog("LocalStorage確認: データなし");
+                onClick={async () => {
+                  try {
+                    addDebugLog("手動でデータを取得中...");
+                    const remoteData = await fetchPortfolioData();
+                    if (remoteData) {
+                      addDebugLog(`✓ データ取得成功: ${JSON.stringify(remoteData).length} bytes`);
+                    } else {
+                      addDebugLog("⚠ データが見つかりません");
+                    }
+                  } catch (error) {
+                    addDebugLog(`✗ エラー: ${error}`);
                   }
                 }}
               >
-                LocalStorage確認
+                Supabase確認
               </button>
               <button
                 className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm"
-                onClick={() => {
-                  const testKey = "test-" + Date.now();
-                  const testValue = "test-value-" + Math.random();
-                  localStorage.setItem(testKey, testValue);
-                  const retrieved = localStorage.getItem(testKey);
-                  if (retrieved === testValue) {
-                    addDebugLog("✓ LocalStorageテスト: 正常動作");
-                    localStorage.removeItem(testKey);
-                  } else {
-                    addDebugLog("✗ LocalStorageテスト: 動作不良");
+                onClick={async () => {
+                  try {
+                    addDebugLog("テストデータを保存中...");
+                    await savePortfolioData(data);
+                    addDebugLog("✓ テスト保存成功");
+                  } catch (error) {
+                    addDebugLog(`✗ テスト保存失敗: ${error}`);
                   }
                 }}
               >
-                動作テスト
+                保存テスト
               </button>
               <button
                 className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
